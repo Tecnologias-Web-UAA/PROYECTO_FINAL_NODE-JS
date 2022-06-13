@@ -39,6 +39,25 @@ router.post('/altas', async (req,res) => {
     res.send('Alta exitosa');
 });
 
+router.post('/altaCompra', async (req,res) => {
+    const {id, descripcion,nombre,precio_unitario,cantidad,imagen,fecha,total } = req.body;
+    
+    
+
+    await db.collection('compras').add({
+        id,
+        descripcion,
+        nombre,
+        precio_unitario,
+        cantidad,
+        imagen,
+        fecha,
+        total
+    });
+
+    res.send('Alta exitosa');
+});
+
 //Opcion de eliminar un doc de la base de datos
 router.get('/eliminar/:id', async (req, res) => {
     await db.collection('producto').doc(req.params.id).delete();
