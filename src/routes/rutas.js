@@ -39,24 +39,7 @@ router.post('/altas', async (req,res) => {
     res.send('Alta exitosa');
 });
 
-router.post('/altaCompra', async (req,res) => {
-    const {id, descripcion,nombre,precio_unitario,cantidad,imagen,fecha,total } = req.body;
-    
-    
 
-    await db.collection('compras').add({
-        id,
-        descripcion,
-        nombre,
-        precio_unitario,
-        cantidad,
-        imagen,
-        fecha,
-        total
-    });
-
-    res.send('Alta exitosa');
-});
 
 //Opcion de eliminar un doc de la base de datos
 router.get('/eliminar/:id', async (req, res) => {
@@ -96,5 +79,57 @@ router.get('/consultar', async (req, res) => {
 
       res.send(vec);
 });
+///compras
+router.post('/altaCompra/:coleccion', async (req,res) => {
+    const {id, descripcion,nombre,precio_unitario,cantidad,imagen,fecha,total } = req.body;
+    const mis_datos = req.body;
+    const coleccion = req.params.coleccion;   
 
+    await db.collection(coleccion).add(mis_datos);
+
+    res.send('Alta exitosa');
+});
+router.get('/consultaTodo/:coleccion', async (req,res)=>{
+    const collection = req.params.coleccion;
+    console.log("hi"+collection);
+    
+    const querySnapshot = await db.collection(''+collection).get();
+    
+    /* for (let i = 0; i < querySnapshot.size; i++) {
+        console.log(querySnapshot.docs[i].data());
+        
+    } */
+    const myarray = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+    myids = [];
+    snapshot = await db.collection(collection).get();
+    snapshot.forEach(doc => {//recorretodo el vector sacando todos sus datos
+        console.log(doc.id, '=>', doc.data());
+        myids.push(doc.id);
+      });
+    console.log(myids);
+    //console.log(querySnapshot.docs[1].data());
+    res.send({//envio todo el array de la base de datos de firebase
+        myarray:myarray,
+        myids:myids
+    });
+});
+
+
+router.get('/eliminarAlgo/:coleccion/:id', async (req, res) => {
+    await db.collection(req.params.coleccion).doc(req.params.id).delete();
+    coleccion = req.params.coleccion;
+    id = req.params.id;
+    console.log("id: "+id+" -coleccion: "+coleccion);
+    res.send('Registro eliminado exitosamente');
+});
+//Opcion de petición de Actualizar doc de la base de datos
+router.post('/actualiarAlgo/:coleccion/:id', async (req, res) => {
+    const  id  = req.params.id; //obtengo el id mandado por el metodo post
+    const coleccion = req.params.coleccion;
+    console.log("id: "+id+" coleccion: "+coleccion)
+    // db.collection('producto').doc(id).update(req.body);
+});
 module.exports = router
