@@ -39,25 +39,6 @@ router.post('/altas', async (req,res) => {
     res.send('Alta exitosa');
 });
 
-router.post('/altaCompra', async (req,res) => {
-    const {id, descripcion,nombre,precio_unitario,cantidad,imagen,fecha,total } = req.body;
-    
-    
-
-    await db.collection('compras').add({
-        id,
-        descripcion,
-        nombre,
-        precio_unitario,
-        cantidad,
-        imagen,
-        fecha,
-        total
-    });
-
-    res.send('Alta exitosa');
-});
-
 //Opcion de eliminar un doc de la base de datos
 router.get('/eliminar/:id', async (req, res) => {
     await db.collection('producto').doc(req.params.id).delete();
@@ -79,15 +60,15 @@ router.get('/consultar', async (req, res) => {
     console.log(resultado.data());
     res.send(resultado.data()); */
 
-    const arrayProd = db.collection('producto');
-    const snapshot = await arrayProd.where('cantidad', '<=', 6).get();//recupera un vector con la consulta dada
+    let arrayProd = db.collection('producto');
+    let snapshot = await arrayProd.where('cantidad', '<=', 6).get();//recupera un vector con la consulta dada
 
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;
       }
       
-      var vec=[];
+      let vec=[];
 
       snapshot.forEach(doc => {//recorretodo el vector sacando todos sus datos
         console.log(doc.id, '=>', doc.data());
@@ -95,6 +76,27 @@ router.get('/consultar', async (req, res) => {
       });
 
       res.send(vec);
+});
+
+router.get('/consultarqr/:id', async (req, res) => {
+
+    let arrayProd = db.collection('producto');
+    let snapshot = await arrayProd.where('id', '==', req.params.id).get();//recupera un vector con la consulta dada
+    let respu;
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+      }
+
+      snapshot.forEach(doc => {//recorretodo el vector sacando todos sus datos
+        console.log(doc.id, '=>', doc.data());
+        respu=doc.data();
+      });
+      console.log(respu)
+      res.send({
+        respuesta: respu
+      });
+
 });
 
 module.exports = router
