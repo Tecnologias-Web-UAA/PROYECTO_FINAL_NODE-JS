@@ -40,7 +40,6 @@ router.post('/altas', async (req,res) => {
 });
 
 
-
 //Opcion de eliminar un doc de la base de datos
 router.get('/eliminar/:id', async (req, res) => {
     await db.collection('producto').doc(req.params.id).delete();
@@ -62,15 +61,15 @@ router.get('/consultar', async (req, res) => {
     console.log(resultado.data());
     res.send(resultado.data()); */
 
-    const arrayProd = db.collection('producto');
-    const snapshot = await arrayProd.where('cantidad', '<=', 6).get();//recupera un vector con la consulta dada
+    let arrayProd = db.collection('producto');
+    let snapshot = await arrayProd.where('cantidad', '<=', 6).get();//recupera un vector con la consulta dada
 
     if (snapshot.empty) {
         console.log('No matching documents.');
         return;
       }
       
-      var vec=[];
+      let vec=[];
 
       snapshot.forEach(doc => {//recorretodo el vector sacando todos sus datos
         console.log(doc.id, '=>', doc.data());
@@ -144,4 +143,44 @@ router.get('/consultaUno/:coleccion/:id', async (req, res) => {
             data:doc.data()
         });
  });
+
+router.get('/consultarqr/:id', async (req, res) => {
+  let consu = await db.collection('producto').doc(req.params.id).get();
+  let respu = consu.data();
+  
+  console.log(respu)
+  res.send({
+    respuesta: respu
+  });
+
+});
+
+router.get('/comprarProducto/:id', async (req, res) => {
+  let consuProd = await db.collection('producto').doc(req.params.id).get();
+  let respu = consuProd.data();
+  let cant = respu.cantidad-1;
+  let consuActua = db.collection('producto').doc(req.params.id);
+  let cambio = await consuActua.update({
+    cantidad: cant
+  });
+
+  res.send({
+    msg:'Compra Exitosa',
+    cantidadnew: cant
+  });
+
+});
+
+router.get('/QRProductoID/:id', async (req, res) => {
+  let consu = await db.collection('producto').doc(req.params.id).get();
+  let respu = consu.data();
+   
+      console.log(respu)
+      res.send({
+        respuesta: respu
+      });
+
+});
+
+
 module.exports = router
