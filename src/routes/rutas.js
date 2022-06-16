@@ -91,14 +91,9 @@ router.post('/altaCompra/:coleccion', async (req,res) => {
 });
 router.get('/consultaTodo/:coleccion', async (req,res)=>{
     const collection = req.params.coleccion;
-    console.log("hi"+collection);
     
     const querySnapshot = await db.collection(''+collection).get();
-    
-    /* for (let i = 0; i < querySnapshot.size; i++) {
-        console.log(querySnapshot.docs[i].data());
-        
-    } */
+  
     const myarray = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -109,7 +104,6 @@ router.get('/consultaTodo/:coleccion', async (req,res)=>{
         console.log(doc.id, '=>', doc.data());
         myids.push(doc.id);
       });
-    console.log(myids);
     //console.log(querySnapshot.docs[1].data());
     res.send({//envio todo el array de la base de datos de firebase
         myarray:myarray,
@@ -126,10 +120,28 @@ router.get('/eliminarAlgo/:coleccion/:id', async (req, res) => {
     res.send('Registro eliminado exitosamente');
 });
 //Opcion de petición de Actualizar doc de la base de datos
-router.post('/actualiarAlgo/:coleccion/:id', async (req, res) => {
+router.post('/actualizarAlgo/:coleccion/:id', async (req, res) => {
     const  id  = req.params.id; //obtengo el id mandado por el metodo post
     const coleccion = req.params.coleccion;
-    console.log("id: "+id+" coleccion: "+coleccion)
-    // db.collection('producto').doc(id).update(req.body);
+    const obj = req.body;
+    console.log("id: "+id+" coleccion: "+coleccion+" obj: "+obj);
+    
+     db.collection(coleccion).doc(id).update(req.body);
+     res.send('actualizarAlgo exitoso')
 });
+router.get('/consultaUno/:coleccion/:id', async (req, res) => {
+  
+     const  id  = req.params.id; //obtengo el id mandado por el metodo post
+     const coleccion = req.params.coleccion;
+     console.log("id: "+id+" coleccion: "+coleccion);
+     
+     const doc_ref = db.collection(coleccion).doc(id);
+     const doc = await doc_ref.get();
+    console.log("data: "+doc.data());
+
+ 
+        res.send({
+            data:doc.data()
+        });
+ });
 module.exports = router
