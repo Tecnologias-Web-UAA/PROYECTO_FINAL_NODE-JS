@@ -79,19 +79,36 @@ router.get('/consultar', async (req, res) => {
 });
 
 router.get('/consultarqr/:id', async (req, res) => {
+  let consu = await db.collection('producto').doc(req.params.id).get();
+  let respu = consu.data();
+  
+  console.log(respu)
+  res.send({
+    respuesta: respu
+  });
 
-    let arrayProd = db.collection('producto');
-    let snapshot = await arrayProd.where('id', '==', req.params.id).get();//recupera un vector con la consulta dada
-    let respu;
-    if (snapshot.empty) {
-        console.log('No matching documents.');
-        return;
-      }
+});
 
-      snapshot.forEach(doc => {//recorretodo el vector sacando todos sus datos
-        console.log(doc.id, '=>', doc.data());
-        respu=doc.data();
-      });
+router.get('/comprarProducto/:id', async (req, res) => {
+  let consuProd = await db.collection('producto').doc(req.params.id).get();
+  let respu = consuProd.data();
+  let cant = respu.cantidad-1;
+  let consuActua = db.collection('producto').doc(req.params.id);
+  let cambio = await consuActua.update({
+    cantidad: cant
+  });
+
+  res.send({
+    msg:'Compra Exitosa',
+    cantidadnew: cant
+  });
+
+});
+
+router.get('/QRProductoID/:id', async (req, res) => {
+  let consu = await db.collection('producto').doc(req.params.id).get();
+  let respu = consu.data();
+   
       console.log(respu)
       res.send({
         respuesta: respu
