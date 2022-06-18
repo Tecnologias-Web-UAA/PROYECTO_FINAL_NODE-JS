@@ -88,6 +88,16 @@ router.post('/altaCompra/:coleccion', async (req,res) => {
 
     res.send('Alta exitosa');
 });
+router.post('/altaAlgo/:coleccion', async (req,res) => {
+    
+    const mis_datos = req.body;
+    const coleccion = req.params.coleccion;   
+
+    await db.collection(coleccion).add(mis_datos);
+    console.log(mis_datos);
+    res.send('Alta exitosa');
+});
+
 router.get('/consultaTodo/:coleccion', async (req,res)=>{
     const collection = req.params.coleccion;
     
