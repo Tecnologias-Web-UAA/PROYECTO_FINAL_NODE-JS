@@ -183,4 +183,16 @@ router.get('/QRProductoID/:id', async (req, res) => {
 });
 
 
+router.post('/altaUsuario/:coleccion', async (req,res) => {
+  let {id,nombre,privilegios,correo,domicilio } = req.body;
+  let mis_datos = req.body;
+  let coleccion = req.params.coleccion;   
+
+  await db.collection(coleccion).add(mis_datos);
+
+  res.send('Alta exitosa del Usuario');
+});
+
+
+
 module.exports = router
