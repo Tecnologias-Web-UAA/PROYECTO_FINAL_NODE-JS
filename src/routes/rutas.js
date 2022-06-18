@@ -1,9 +1,11 @@
 const express = require("express"); // Importar express
 const router = express.Router();
 const enviar = require('../control/correo');
-router.post('/envio',enviar.envio)
 
-const {db} = require("../firebase")
+const {db} = require("../firebase");
+
+//Peticion para enviar correo
+router.post('/envio',enviar.envio);
 
 //Opcion para petición para condultar toda la informacion de la base de datos
 router.get('/consultas', async (req,res)=>{
