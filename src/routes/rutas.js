@@ -169,6 +169,7 @@ router.get('/comprarProducto/:id', async (req, res) => {
   let consuProd = await db.collection('producto').doc(req.params.id).get();
   let respu = consuProd.data();
   let cant = respu.cantidad-1;
+  let pres = respu.precio;
   let consuActua = db.collection('producto').doc(req.params.id);
   let cambio = await consuActua.update({
     cantidad: cant
@@ -176,7 +177,8 @@ router.get('/comprarProducto/:id', async (req, res) => {
 
   res.send({
     msg:'Compra Exitosa',
-    cantidadnew: cant
+    cantidadnew: cant,
+    precio: pres
   });
 
 });
