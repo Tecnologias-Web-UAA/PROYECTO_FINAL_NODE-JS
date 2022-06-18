@@ -1,5 +1,7 @@
 const express = require("express"); // Importar express
 const router = express.Router();
+const enviar = require('../control/correo');
+router.post('/envio',enviar.envio)
 
 const {db} = require("../firebase")
 
