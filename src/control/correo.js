@@ -13,7 +13,7 @@ const envio=(req=request,resp=response)=>{
         }
     });
     const opciones={
-        from: 'Nombreempresaaqui',
+        from: '',
         subject: body.asunto,
         to:body.email,
         text:body.mensaje
