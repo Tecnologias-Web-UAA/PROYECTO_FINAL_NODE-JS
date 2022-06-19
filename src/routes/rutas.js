@@ -8,6 +8,11 @@ router.get('/',(req,res)=>{
 
 
 });
+
+router.get('/port',(req,res)=>{
+
+  
+})
 //Peticion para enviar correo
 router.post('/envio',enviar.envio);
 
