@@ -14,8 +14,8 @@ const envio=(req=request,resp=response)=>{
     });
     const opciones={
         from: '',
-        subject: body.asunto,
-        to:body.email,
+        subject: 'Solicitud de correo de: ' + body.email,
+        to: 'luisenriquenavarrocruz@gmail.com',
         text:body.mensaje
     };
     config.sendMail(opciones,function(error,result){
