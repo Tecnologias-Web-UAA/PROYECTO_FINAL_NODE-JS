@@ -3,7 +3,11 @@ const router = express.Router();
 const enviar = require('../control/correo');
 
 const {db} = require("../firebase");
+router.get('/',(req,res)=>{
+  res.sendFile(process.cwd()+"/src/dist/tienda-electronica/index.html");
 
+
+});
 //Peticion para enviar correo
 router.post('/envio',enviar.envio);
 
